@@ -1,0 +1,450 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Loka Store — المتجر</title>
+  <style>
+    /* Reset */
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;background:#000000;color:#eee}
+    :root{
+      --accent:#ff6b35;
+      --muted:#bdbdbd;
+      --bg:#0b0b0c;
+      --surface:#0e0e10;
+      --text:#eee;
+      --card-bg:linear-gradient(180deg, rgb(0, 0, 0), rgba(255, 255, 255, 0.214));
+    }
+
+    /* FULLSCREEN HERO */
+    .hero{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#000;z-index:40;overflow:hidden}
+    .hero .bg-fire{position:absolute;inset:0;background:radial-gradient(ellipse at center, rgba(255,90,30,0.12), rgba(0, 0, 0, 0.6));filter:blur(30px);opacity:0.9}
+    .loka-fire{font-weight:900;font-size:clamp(48px,12vw,160px);letter-spacing:6px;text-transform:uppercase;position:relative;padding:20px 40px;color:#fff}
+    /* Fire effect */
+    .loka-fire::before{
+      content:'Loka';position:absolute;inset:0;background:linear-gradient(90deg,#ffef62,#ff6b35,#ff2d00,#a00000);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:flame-sweep 2.8s linear infinite}
+    .loka-fire::after{
+      content:'';position:absolute;left:0;right:0;bottom:-8px;height:60px;background:radial-gradient(ellipse at center, rgba(255,100,40,0.6), rgba(255,30,0,0.25) 40%, transparent 55%);filter:blur(24px);transform:scaleX(1.2)}
+    @keyframes flame-sweep{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+
+    /* Flicker particles */
+    .flame-particles{position:absolute;inset:0;pointer-events:none}
+    .particle{position:absolute;width:6px;height:12px;border-radius:50%;opacity:0.9;filter:blur(1px);animation:rise 2s linear infinite}
+    @keyframes rise{0%{transform:translateY(0) scale(0.6);opacity:1}100%{transform:translateY(-260px) scale(0.2);opacity:0}}
+
+    /* ENTRY BUTTON */
+    .enter-btn{position:relative;margin-top:14px;display:inline-block;padding:12px 20px;border-radius:999px;background:rgba(0, 0, 0, 0.45);backdrop-filter:blur(4px);border:1px solid rgba(255,255,255,0.06);color:#fff;text-decoration:none}
+
+    /* MAIN LAYOUT */
+    header{padding:18px 24px;background:linear-gradient(180deg, rgba(0,0,0,0.4), rgba(0,0,0,0.25));position:sticky;top:0;z-index:20;border-bottom:1px solid rgba(255,255,255,0.03)}
+    .brand{display:flex;gap:12px;align-items:center}
+    .brand .logo{width:44px;height:44px;border-radius:8px;background:linear-gradient(135deg,var(--accent),#ffb199);display:flex;align-items:center;justify-content:center;font-weight:900}
+    .brand h1{font-size:18px;margin:0}
+
+    .container{max-width:1200px;margin:26px auto;padding:0 18px}
+    .controls{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:18px;align-items:center}
+    .search{flex:1;min-width:200px}
+    input,select{width:100%;padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:var(--surface);color:var(--text)}
+    .toggle{padding:8px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);cursor:pointer;background:transparent;color:inherit}
+
+    /* GRID */
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+    .card{background:var(--card-bg);padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);display:flex;flex-direction:column;gap:8px}
+    .card img{width:100%;height:160px;object-fit:cover;border-radius:8px}
+    .card h3{font-size:16px;margin:0}
+    .price{font-weight:700;color:var(--accent)}
+    .meta{display:flex;justify-content:space-between;align-items:center}
+    .btn{padding:8px 12px;border-radius:10px;border:none;background:var(--accent);color:#fff;cursor:pointer}
+
+    footer{padding:28px;text-align:center;color:var(--muted);font-size:14px}
+
+    /* CART MODAL */
+    #cartModal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);display:none;justify-content:center;align-items:center;z-index:100}
+    #cartContent{background:var(--bg);padding:20px;border-radius:12px;max-width:500px;width:92%;max-height:80%;overflow:auto;display:flex;flex-direction:column;gap:10px;position:relative;color:var(--text)}
+    #cartContent h2{margin:0 0 10px 0;color:var(--accent);text-align:center}
+    #cartContent .closeCart{position:absolute;top:10px;right:12px;background:transparent;border:none;color:var(--accent);font-size:18px;cursor:pointer;padding:6px}
+    .cart-item{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.06)}
+    .cart-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:6px}
+    .small-btn{padding:6px 8px;border-radius:8px;border:none;cursor:pointer}
+
+    @media (max-width:800px){.loka-fire{font-size:clamp(36px,18vw,72px)} }
+  </style>
+</head>
+<body>
+
+  <!-- HERO (ENTRY) -->
+  <div class="hero" id="hero">
+    <div class="bg-fire"></div>
+    <div style="text-align:center;z-index:45;">
+      <div class="loka-fire" aria-hidden="true">Loka</div>
+      <a href="#main" class="enter-btn" id="enter">دخول المتجر</a>
+    </div>
+    <div class="flame-particles" id="particles"></div>
+  </div>
+
+  <!-- HEADER -->
+  <header>
+    <div class="container" style="display:flex;justify-content:space-between;align-items:center">
+      <div class="brand">
+        <div class="logo">L</div>
+        <div>
+          <h1>متجر Loka</h1>
+          <div style="font-size:12px;color:var(--muted)">منتجات محلية وحقيقية — مرحبًا بك</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <button class="toggle" id="darkToggle">تبديل داكن/فاتح</button>
+        <!-- kept as link visually like original but with id for scripting -->
+        <a href="#cart" class="toggle" id="cartLink">عربة (0)</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="container">
+    <section class="controls">
+      <div style="flex:1;min-width:220px" class="search">
+        <input id="q" placeholder="ابحث عن منتج، اسم، فئة...">
+      </div>
+      <div style="width:150px">
+        <select id="category">
+          <option value="all">كل الأقسام</option>
+          <option value="electronics">إلكترونيات</option>
+          <option value="home">منزل</option>
+          <option value="fashion">موضة</option>
+          <option value="toys">ألعاب وهدايا</option>
+        </select>
+      </div>
+      <div style="width:150px">
+        <select id="sort">
+          <option value="popular">الأكثر شعبية</option>
+          <option value="price-asc">السعر: من الأقل</option>
+          <option value="price-desc">السعر: من الأعلى</option>
+        </select>
+      </div>
+      <div style="width:140px">
+        <button class="btn" id="filterBtn">تطبيق</button>
+      </div>
+    </section>
+
+    <section id="products" class="grid" aria-live="polite">
+      <!-- Products will be injected here -->
+    </section>
+
+    <footer>
+      © <span id="year"></span> Loka Store — جميع الحقوق محفوظة
+    </footer>
+  </main>
+
+  <!-- CART MODAL -->
+  <div id="cartModal" aria-hidden="true">
+    <div id="cartContent" role="dialog" aria-modal="true" aria-labelledby="cartTitle">
+      <button class="closeCart" id="closeCart" aria-label="إغلاق العربة">×</button>
+      <h2 id="cartTitle">عربة التسوق</h2>
+      <div id="cartItems"></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
+        <div style="font-weight:700">الإجمالي: <span id="cartTotal">0</span> ج.م</div>
+        <div class="cart-actions">
+          <button class="small-btn" id="clearCartBtn" style="background:transparent;border:1px solid rgba(255, 255, 255, 0.095);color:inherit">مسح العربة</button>
+          <button class="small-btn" id="checkoutBtn" style="background:var(--accent);color:#fff">إتمام الشراء</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ====== HERO PARTICLES ======
+    const particles = document.getElementById('particles');
+    for(let i=0;i<30;i++){
+      const p=document.createElement('div');
+      p.className='particle';
+      p.style.left = (10 + Math.random()*80)+'%';
+      p.style.bottom = (10 + Math.random()*20)+'px';
+      p.style.background = ['#ff6b35','#ff964f','#ffb199'][Math.floor(Math.random()*3)];
+      p.style.animationDuration = (1.6 + Math.random()*1.6)+'s';
+      p.style.opacity = 0.7 + Math.random()*0.4;
+      p.style.transform = 'translateY(0)';
+      particles.appendChild(p);
+    }
+
+    // Hide hero on enter (preserve original behavior)
+    document.getElementById('enter').addEventListener('click', (e)=>{
+      e.preventDefault();
+      document.getElementById('hero').style.transition='opacity .7s ease';
+      document.getElementById('hero').style.opacity=0;
+      setTimeout(()=>document.getElementById('hero').style.display='none',750);
+      location.hash='#main';
+    });
+
+    // ====== THEME / COLOR TOGGLE (affects all) ======
+    const darkToggle = document.getElementById('darkToggle');
+    let isLight = false;
+    darkToggle.addEventListener('click', ()=>{
+      const root = document.documentElement;
+      if(!isLight){
+        // switch to light
+        root.style.setProperty('--accent','#2db3ff');
+        root.style.setProperty('--bg','#f6f7fb');
+        root.style.setProperty('--surface','#ffffff');
+        root.style.setProperty('--text','#0b0b0c');
+        root.style.setProperty('--card-bg','linear-gradient(180deg, rgba(0,0,0,0.02), rgba(255,255,255,0.15))');
+        document.body.style.background = '#f6f7fb';
+        document.body.style.color = '#0b0b0c';
+        isLight = true;
+      } else {
+        // switch to dark (original)
+        root.style.setProperty('--accent','#ff6b35');
+        root.style.setProperty('--bg','#0b0b0c');
+        root.style.setProperty('--surface','#0e0e10');
+        root.style.setProperty('--text','#eee');
+        root.style.setProperty('--card-bg','linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.22))');
+        document.body.style.background = '#0b0b0c';
+        document.body.style.color = '#eee';
+        isLight = false;
+      }
+    });
+
+    // ====== PRODUCTS DATA (original + 15 new toys) ======
+    const products = [
+      {id:1,title:'سماعات لاسلكية Vibe',cat:'electronics',price:499, img:'https://source.unsplash.com/collection/365219/400x400?sig=1'},
+      {id:2,title:'سماعة رأس مريحة',cat:'electronics',price:299,img:'https://source.unsplash.com/collection/365219/400x400?sig=2'},
+      {id:3,title:'محمول لوحي صغير',cat:'electronics',price:1199,img:'https://source.unsplash.com/collection/190727/400x400?sig=3'},
+      {id:4,title:'إضاءة ليلية ذكية',cat:'home',price:149,img:'https://source.unsplash.com/collection/827743/400x400?sig=4'},
+      {id:5,title:'وسادة مريحة للنوم',cat:'home',price:99,img:'https://source.unsplash.com/collection/103620/400x400?sig=5'},
+      {id:6,title:'مغناطيس ديكور حائط',cat:'home',price:45,img:'https://source.unsplash.com/collection/11649432/400x400?sig=6'},
+      {id:7,title:'قميص قطني أنيق',cat:'fashion',price:199,img:'https://source.unsplash.com/collection/888146/400x400?sig=7'},
+      {id:8,title:'حذاء رياضي خفيف',cat:'fashion',price:329,img:'https://source.unsplash.com/collection/1134842/400x400?sig=8'},
+      {id:9,title:'حزام جلد طبيعي',cat:'fashion',price:129,img:'https://source.unsplash.com/collection/276019/400x400?sig=9'},
+      {id:10,title:'لعبة تعليمية للأطفال',cat:'toys',price:79,img:'https://source.unsplash.com/collection/1424340/400x400?sig=10'},
+      {id:11,title:'مجموعة رسم ألوان',cat:'toys',price:59,img:'https://source.unsplash.com/collection/1111575/400x400?sig=11'},
+      {id:12,title:'سلسلة مفاتيح فريدة',cat:'toys',price:25,img:'https://source.unsplash.com/collection/823539/400x400?sig=12'},
+      {id:13,title:'حامل هاتف مكتبي',cat:'electronics',price:39,img:'https://source.unsplash.com/collection/1424340/400x400?sig=13'},
+      {id:14,title:'شاحن سريع متعدد',cat:'electronics',price:159,img:'https://source.unsplash.com/collection/190727/400x400?sig=14'},
+      {id:15,title:'حافظة جلد للموبايل',cat:'fashion',price:89,img:'https://source.unsplash.com/collection/888146/400x400?sig=15'},
+      {id:16,title:'لوحة مفاتيح ميكانيكية',cat:'electronics',price:749,img:'https://source.unsplash.com/collection/365219/400x400?sig=16'},
+      {id:17,title:'بطانية صوف صغيرة',cat:'home',price:179,img:'https://source.unsplash.com/collection/103620/400x400?sig=17'},
+      {id:18,title:'مجوهرات يدوية',cat:'fashion',price:239,img:'https://source.unsplash.com/collection/276019/400x400?sig=18'},
+      {id:19,title:'مكعب ألغاز ثلاثي',cat:'toys',price:49,img:'https://source.unsplash.com/collection/1111575/400x400?sig=19'},
+      {id:20,title:'زيت عطري طبيعي',cat:'home',price:69,img:'https://source.unsplash.com/collection/11649432/400x400?sig=20'},
+      {id:21,title:'مشروع تعليمي إلكتروني',cat:'electronics',price:259,img:'https://source.unsplash.com/collection/190727/400x400?sig=21'},
+      {id:22,title:'حقيبة قطنية قابلة للطي',cat:'fashion',price:59,img:'https://source.unsplash.com/collection/888146/400x400?sig=22'},
+      {id:23,title:'ألعاب من خشب طبيعي',cat:'toys',price:89,img:'https://source.unsplash.com/collection/1424340/400x400?sig=23'},
+      {id:24,title:'مقلمة أدوات مكتبية',cat:'home',price:39,img:'https://source.unsplash.com/collection/103620/400x400?sig=24'},
+      {id:25,title:'مصباح مكتب قابل للتعديل',cat:'home',price:129,img:'https://source.unsplash.com/collection/827743/400x400?sig=25'},
+      {id:26,title:'غطاء واقٍ للكمبيوتر',cat:'electronics',price:199,img:'https://source.unsplash.com/collection/365219/400x400?sig=26'},
+      {id:27,title:'عطر مركّز للجنسين',cat:'fashion',price:299,img:'https://source.unsplash.com/collection/276019/400x400?sig=27'},
+      {id:28,title:'مجموعة أدوات صغيرة',cat:'home',price:99,img:'https://source.unsplash.com/collection/11649432/400x400?sig=28'},
+      {id:29,title:'لعبة بناء مرنة',cat:'toys',price:129,img:'https://source.unsplash.com/collection/1111575/400x400?sig=29'},
+      {id:30,title:'قاعدة شحن لاسلكية',cat:'electronics',price:189,img:'https://source.unsplash.com/collection/190727/400x400?sig=30'},
+      // 15 ألعاب جديدة مضافة (31-45)
+      {id:31,title:'روبوت تعليمي ذكي',cat:'toys',price:299,img:'https://source.unsplash.com/collection/1424340/400x400?sig=31'},
+      {id:32,title:'مجموعة بزل ثلاثي الأبعاد',cat:'toys',price:129,img:'https://source.unsplash.com/collection/1424340/400x400?sig=32'},
+      {id:33,title:'سيارة سباق ريموت',cat:'toys',price:199,img:'https://source.unsplash.com/collection/1424340/400x400?sig=33'},
+      {id:34,title:'دمية تفاعلية',cat:'toys',price:159,img:'https://source.unsplash.com/collection/1424340/400x400?sig=34'},
+      {id:35,title:'مجموعة تجارب علوم',cat:'toys',price:239,img:'https://source.unsplash.com/collection/1424340/400x400?sig=35'},
+      {id:36,title:'لوحة رسم رقمية للأطفال',cat:'toys',price:149,img:'https://source.unsplash.com/collection/1424340/400x400?sig=36'},
+      {id:37,title:'كرة قدم للأطفال',cat:'toys',price:59,img:'https://source.unsplash.com/collection/1424340/400x400?sig=37'},
+      {id:38,title:'مكعبات خشبية تعليمية',cat:'toys',price:89,img:'https://source.unsplash.com/collection/1424340/400x400?sig=38'},
+      {id:39,title:'طائرة ورقية ملونة',cat:'toys',price:49,img:'https://source.unsplash.com/collection/1424340/400x400?sig=39'},
+      {id:40,title:'مجموعة سيارات صغيرة',cat:'toys',price:129,img:'https://source.unsplash.com/collection/1424340/400x400?sig=40'},
+      {id:41,title:'لوحة موسيقية للأطفال',cat:'toys',price:199,img:'https://source.unsplash.com/collection/1424340/400x400?sig=41'},
+      {id:42,title:'دمية منزلية صغيرة',cat:'toys',price:79,img:'https://source.unsplash.com/collection/1424340/400x400?sig=42'},
+      {id:43,title:'لعبة تركيب ميكانيكية',cat:'toys',price:199,img:'https://source.unsplash.com/collection/1424340/400x400?sig=43'},
+      {id:44,title:'بطاقات تعليمية ملونة',cat:'toys',price:79,img:'https://source.unsplash.com/collection/1424340/400x400?sig=44'},
+      {id:45,title:'مجموعة فنون وأشغال يدوية',cat:'toys',price:129,img:'https://source.unsplash.com/collection/1424340/400x400?sig=45'}
+    ];
+
+    // ====== RENDER PRODUCTS ======
+    const productsEl = document.getElementById('products');
+
+    function renderList(list){
+      productsEl.innerHTML='';
+      list.forEach(p=>{
+        const div=document.createElement('article');div.className='card';
+        div.innerHTML=`
+          <img loading="lazy" src="${p.img}" alt="${p.title}">
+          <h3>${p.title}</h3>
+          <div class="meta"><div class="price">${p.price} ج.م</div><div style="font-size:13px;color:var(--muted)">${p.cat}</div></div>
+          <div style="display:flex;gap:8px;margin-top:6px">
+            <button class="btn" data-id="${p.id}">أضف إلى السلة</button>
+            <button class="toggle viewBtn" data-id="${p.id}" style="background:transparent;color:inherit;border:1px solid rgba(255,255,255,0.04)">عرض</button>
+          </div>
+        `;
+        productsEl.appendChild(div);
+      });
+    }
+
+    // initial render
+    renderList(products);
+
+    // ====== FILTER & SEARCH ======
+    document.getElementById('filterBtn').addEventListener('click', ()=>{
+      const q=document.getElementById('q').value.trim().toLowerCase();
+      const cat=document.getElementById('category').value;
+      const sort=document.getElementById('sort').value;
+      let list = products.filter(p=>{
+        const matchQ = !q || p.title.toLowerCase().includes(q) || p.cat.toLowerCase().includes(q);
+        const matchCat = cat==='all' || p.cat===cat;
+        return matchQ && matchCat;
+      });
+      if(sort==='price-asc') list.sort((a,b)=>a.price-b.price);
+      if(sort==='price-desc') list.sort((a,b)=>b.price-a.price);
+      renderList(list);
+    });
+
+    // Allow Enter key to search
+    document.getElementById('q').addEventListener('keydown', (e)=>{ if(e.key==='Enter') document.getElementById('filterBtn').click(); });
+
+    // ====== CART (with quantities) ======
+    // cart object: { productId: qty }
+    let cart = {};
+    const cartLink = document.getElementById('cartLink');
+    const cartModal = document.getElementById('cartModal');
+    const cartItemsEl = document.getElementById('cartItems');
+    const cartTotalEl = document.getElementById('cartTotal');
+    const closeCartBtn = document.getElementById('closeCart');
+    const clearCartBtn = document.getElementById('clearCartBtn');
+    const checkoutBtn = document.getElementById('checkoutBtn');
+
+    function updateCartUI(){
+      const totalCount = Object.values(cart).reduce((acc,n)=>acc+n,0);
+      // update header link text (keeps original look)
+      cartLink.textContent = `عربة (${totalCount})`;
+
+      // render modal items
+      cartItemsEl.innerHTML = '';
+      if(totalCount === 0){
+        cartItemsEl.innerHTML = '<p>العربة فارغة</p>';
+        cartTotalEl.textContent = '0';
+        return;
+      }
+
+      let total = 0;
+      for(const id in cart){
+        const qty = cart[id];
+        const p = products.find(x=>x.id == id);
+        if(!p) continue;
+        const lineTotal = p.price * qty;
+        total += lineTotal;
+
+        const itemDiv = document.createElement('div');
+        itemDiv.className = 'cart-item';
+        itemDiv.innerHTML = `
+          <div style="display:flex;gap:8px;align-items:center">
+            <img src="${p.img}" alt="${p.title}" style="width:56px;height:40px;object-fit:cover;border-radius:6px">
+            <div>
+              <div style="font-weight:700">${p.title}</div>
+              <div style="font-size:13px;color:var(--muted)">${p.price} ج.م × ${qty}</div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
+            <div style="font-weight:700">${lineTotal} ج.م</div>
+            <div style="display:flex;gap:6px">
+              <button class="small-btn" data-action="dec" data-id="${id}" style="background:transparent;border:1px solid rgba(255,255,255,0.06);color:inherit">−</button>
+              <button class="small-btn" data-action="inc" data-id="${id}" style="background:transparent;border:1px solid rgba(255,255,255,0.06);color:inherit">+</button>
+              <button class="small-btn" data-action="remove" data-id="${id}" style="background:transparent;border:1px solid rgba(255,255,255,0.06);color:inherit">حذف</button>
+            </div>
+          </div>
+        `;
+        cartItemsEl.appendChild(itemDiv);
+      }
+      cartTotalEl.textContent = total;
+    }
+
+    // add to cart (delegated)
+    document.addEventListener('click', (e)=>{
+      if(e.target.matches('.btn')){
+        const id = e.target.dataset.id;
+        if(!id) return;
+        cart[id] = (cart[id]||0) + 1;
+        // tiny feedback
+        const prev = e.target.innerText;
+        e.target.innerText = 'تم الإضافة';
+        setTimeout(()=> e.target.innerText = prev, 900);
+        updateCartUI();
+      }
+
+      // view product (simple alert modal) - keep lightweight
+      if(e.target.matches('.viewBtn')){
+        const id = e.target.dataset.id;
+        const p = products.find(x=>x.id==id);
+        if(p){
+          // simple in-page quick view using window.alert to avoid extra DOM (keeps code simple)
+          alert(`${p.title}\n\nالسعر: ${p.price} ج.م\nالفئة: ${p.cat}`);
+        }
+      }
+
+      // cart modal controls (increment/decrement/remove)
+      const action = e.target.dataset && e.target.dataset.action;
+      if(action){
+        const id = e.target.dataset.id;
+        if(action === 'inc'){ cart[id] = (cart[id]||0) + 1; updateCartUI(); }
+        if(action === 'dec'){ if(cart[id] > 1) cart[id]--; else delete cart[id]; updateCartUI(); }
+        if(action === 'remove'){ delete cart[id]; updateCartUI(); }
+      }
+    });
+
+    // open cart modal when header cart link clicked
+    cartLink.addEventListener('click', (e)=>{
+      e.preventDefault();
+      cartModal.style.display = 'flex';
+      updateCartUI();
+      cartModal.setAttribute('aria-hidden','false');
+    });
+
+    // close cart
+    closeCartBtn.addEventListener('click', ()=>{
+      cartModal.style.display = 'none';
+      cartModal.setAttribute('aria-hidden','true');
+    });
+
+    // click outside modal to close
+    cartModal.addEventListener('click', (e)=>{
+      if(e.target === cartModal){
+        cartModal.style.display = 'none';
+        cartModal.setAttribute('aria-hidden','true');
+      }
+    });
+
+    // clear cart
+    clearCartBtn.addEventListener('click', ()=>{
+      if(confirm('هل تريد مسح جميع العناصر من العربة؟')){
+        cart = {};
+        updateCartUI();
+        cartModal.style.display = 'none';
+      }
+    });
+
+    // checkout (simple demo behavior)
+    checkoutBtn.addEventListener('click', ()=>{
+      const totalCount = Object.values(cart).reduce((a,b)=>a+b,0);
+      if(totalCount === 0){
+        alert('العربة فارغة.');
+        return;
+      }
+      // for demo: show summary then clear cart
+      const total = Object.keys(cart).reduce((sum,id)=>{
+        const p = products.find(x=>x.id==id);
+        return sum + (p ? p.price * cart[id] : 0);
+      },0);
+      alert(`إجمالي طلبك ${total} ج.م\n\nشكراً! (وضع الشراء تجريبي)`);
+      cart = {};
+      updateCartUI();
+      cartModal.style.display = 'none';
+    });
+
+    // ====== preserve original simple cart count logic fallback (kept for compatibility) ======
+    // (not needed now because cartLink is updated by updateCartUI)
+
+    // ====== set year ======
+    document.getElementById('year').textContent=new Date().getFullYear();
+
+    // Accessibility: allow pressing Enter on search (already wired)
+    // done above
+
+    // initial cart UI update (in case any prefilled)
+    updateCartUI();
+
+  </script>
+</body>
+</html>
