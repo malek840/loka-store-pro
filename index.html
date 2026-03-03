@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Loka Store — المتجر</title>
+  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
   <style>
     /* Reset */
     *{box-sizing:border-box}
@@ -175,7 +176,7 @@
       setTimeout(()=>document.getElementById('hero').style.display='none',750);
       location.hash='#main';
     });
-
+    
     // ====== THEME / COLOR TOGGLE (affects all) ======
     const darkToggle = document.getElementById('darkToggle');
     let isLight = false;
@@ -206,52 +207,102 @@
 
     // ====== PRODUCTS DATA (original + 15 new toys) ======
     const products = [
-      {id:1,title:'سماعات لاسلكية Vibe',cat:'electronics',price:499, img:'https://source.unsplash.com/collection/365219/400x400?sig=1'},
-      {id:2,title:'سماعة رأس مريحة',cat:'electronics',price:299,img:'https://source.unsplash.com/collection/365219/400x400?sig=2'},
-      {id:3,title:'محمول لوحي صغير',cat:'electronics',price:1199,img:'https://source.unsplash.com/collection/190727/400x400?sig=3'},
-      {id:4,title:'إضاءة ليلية ذكية',cat:'home',price:149,img:'https://source.unsplash.com/collection/827743/400x400?sig=4'},
-      {id:5,title:'وسادة مريحة للنوم',cat:'home',price:99,img:'https://source.unsplash.com/collection/103620/400x400?sig=5'},
-      {id:6,title:'مغناطيس ديكور حائط',cat:'home',price:45,img:'https://source.unsplash.com/collection/11649432/400x400?sig=6'},
-      {id:7,title:'قميص قطني أنيق',cat:'fashion',price:199,img:'https://source.unsplash.com/collection/888146/400x400?sig=7'},
-      {id:8,title:'حذاء رياضي خفيف',cat:'fashion',price:329,img:'https://source.unsplash.com/collection/1134842/400x400?sig=8'},
-      {id:9,title:'حزام جلد طبيعي',cat:'fashion',price:129,img:'https://source.unsplash.com/collection/276019/400x400?sig=9'},
-      {id:10,title:'لعبة تعليمية للأطفال',cat:'toys',price:79,img:'https://source.unsplash.com/collection/1424340/400x400?sig=10'},
-      {id:11,title:'مجموعة رسم ألوان',cat:'toys',price:59,img:'https://source.unsplash.com/collection/1111575/400x400?sig=11'},
-      {id:12,title:'سلسلة مفاتيح فريدة',cat:'toys',price:25,img:'https://source.unsplash.com/collection/823539/400x400?sig=12'},
-      {id:13,title:'حامل هاتف مكتبي',cat:'electronics',price:39,img:'https://source.unsplash.com/collection/1424340/400x400?sig=13'},
-      {id:14,title:'شاحن سريع متعدد',cat:'electronics',price:159,img:'https://source.unsplash.com/collection/190727/400x400?sig=14'},
-      {id:15,title:'حافظة جلد للموبايل',cat:'fashion',price:89,img:'https://source.unsplash.com/collection/888146/400x400?sig=15'},
-      {id:16,title:'لوحة مفاتيح ميكانيكية',cat:'electronics',price:749,img:'https://source.unsplash.com/collection/365219/400x400?sig=16'},
-      {id:17,title:'بطانية صوف صغيرة',cat:'home',price:179,img:'https://source.unsplash.com/collection/103620/400x400?sig=17'},
-      {id:18,title:'مجوهرات يدوية',cat:'fashion',price:239,img:'https://source.unsplash.com/collection/276019/400x400?sig=18'},
-      {id:19,title:'مكعب ألغاز ثلاثي',cat:'toys',price:49,img:'https://source.unsplash.com/collection/1111575/400x400?sig=19'},
-      {id:20,title:'زيت عطري طبيعي',cat:'home',price:69,img:'https://source.unsplash.com/collection/11649432/400x400?sig=20'},
-      {id:21,title:'مشروع تعليمي إلكتروني',cat:'electronics',price:259,img:'https://source.unsplash.com/collection/190727/400x400?sig=21'},
-      {id:22,title:'حقيبة قطنية قابلة للطي',cat:'fashion',price:59,img:'https://source.unsplash.com/collection/888146/400x400?sig=22'},
-      {id:23,title:'ألعاب من خشب طبيعي',cat:'toys',price:89,img:'https://source.unsplash.com/collection/1424340/400x400?sig=23'},
-      {id:24,title:'مقلمة أدوات مكتبية',cat:'home',price:39,img:'https://source.unsplash.com/collection/103620/400x400?sig=24'},
-      {id:25,title:'مصباح مكتب قابل للتعديل',cat:'home',price:129,img:'https://source.unsplash.com/collection/827743/400x400?sig=25'},
-      {id:26,title:'غطاء واقٍ للكمبيوتر',cat:'electronics',price:199,img:'https://source.unsplash.com/collection/365219/400x400?sig=26'},
-      {id:27,title:'عطر مركّز للجنسين',cat:'fashion',price:299,img:'https://source.unsplash.com/collection/276019/400x400?sig=27'},
-      {id:28,title:'مجموعة أدوات صغيرة',cat:'home',price:99,img:'https://source.unsplash.com/collection/11649432/400x400?sig=28'},
-      {id:29,title:'لعبة بناء مرنة',cat:'toys',price:129,img:'https://source.unsplash.com/collection/1111575/400x400?sig=29'},
-      {id:30,title:'قاعدة شحن لاسلكية',cat:'electronics',price:189,img:'https://source.unsplash.com/collection/190727/400x400?sig=30'},
+      {id:1,title:'سماعات لاسلكية Vibe',cat:'electronics',price:499, img:'image.png'},
+      {id:2,title:'سماعة رأس مريحة',cat:'electronics',price:299,img:'image copy.png'},
+      {id:3,title:'هاتف ايفون 15 بور ماكس',cat:'electronics',price:50000,img:'image copy 2.png'},
+      {id:4,title:'إضاءة ليلية ذكية',cat:'home',price:149,img:'image copy 3.png'},
+      {id:5,title:'وسادة مريحة للنوم',cat:'home',price:99,img:'image copy 4.png'},
+      {id:6,title:'مغناطيس ديكور حائط',cat:'home',price:45,img:'image copy 5.png'},
+      {id:7,title:'قميص قطني أنيق',cat:'fashion',price:199,img:'image copy 6.png'},
+      {id:8,title:'حذاء رياضي خفيف',cat:'fashion',price:329,img:'image copy 7.png'},
+      {id:9,title:'حزام جلد طبيعي',cat:'fashion',price:129,img:'image copy 8.png'},
+      {id:10,title:'لعبة تعليمية للأطفال',cat:'toys',price:79,img:'image copy 9.png'},
+      {id:11,title:'مجموعة رسم ألوان',cat:'toys',price:59,img:'image copy 10.png'},
+      {id:12,title:'سلسلة مفاتيح فريدة',cat:'toys',price:25,img:'image copy 11.png'},
+      {id:13,title:'حامل هاتف مكتبي',cat:'electronics',price:39,img:'image copy 12.png'},
+      {id:14,title:'شاحن سريع متعدد',cat:'electronics',price:159,img:'image copy 13.png'},
+      {id:15,title:'حافظة جلد للموبايل',cat:'fashion',price:89,img:'image copy 14.png'},
+      {id:16,title:'لوحة مفاتيح ميكانيكية',cat:'electronics',price:749,img:'image copy 15.png'},
+      {id:17,title:'بطانية صوف صغيرة',cat:'home',price:179,img:'image copy 16.png'},
+      {id:18,title:'مجوهرات يدوية',cat:'fashion',price:80,img:'image copy 17.png'},
+      {id:19,title:'مكعب ألغاز ثلاثي',cat:'toys',price:49,img:'image copy 18.png'},
+      {id:20,title:'زيت عطري طبيعي',cat:'home',price:69,img:'image copy 19.png'},
+      {id:21,title:'مجسم تعليمي للارض',cat:'electronics',price:259,img:'image copy 20.png'},
+      {id:22,title:'حقيبة قطنية قابلة للطي',cat:'fashion',price:59,img:'image copy 21.png'},
+      {id:23,title:'ألعاب من خشب طبيعي',cat:'toys',price:89,img:'image copy 22.png'},
+      {id:24,title:'مقلمة أدوات مكتبية',cat:'home',price:39,img:'image copy 23.png'},
+      {id:25,title:'مصباح مكتب قابل للتعديل',cat:'home',price:129,img:'image copy 24.png'},
+      {id:26,title:'غطاء واقٍ للكمبيوتر',cat:'electronics',price:199,img:'image copy 25.png'},
+      {id:27,title:'عطر مركّز للجنسين',cat:'fashion',price:299,img:'image copy 26.png'},
+      {id:28,title:'مجموعة أدوات صغيرة',cat:'home',price:99,img:'image copy 27.png'},
+      {id:29,title:'لعبة بناء مرنة',cat:'toys',price:129,img:'image copy 29.png'},
+      {id:30,title:'قاعدة شحن لاسلكية',cat:'electronics',price:189,img:'image copy 28.png'},
       // 15 ألعاب جديدة مضافة (31-45)
-      {id:31,title:'روبوت تعليمي ذكي',cat:'toys',price:299,img:'https://source.unsplash.com/collection/1424340/400x400?sig=31'},
-      {id:32,title:'مجموعة بزل ثلاثي الأبعاد',cat:'toys',price:129,img:'https://source.unsplash.com/collection/1424340/400x400?sig=32'},
-      {id:33,title:'سيارة سباق ريموت',cat:'toys',price:199,img:'https://source.unsplash.com/collection/1424340/400x400?sig=33'},
-      {id:34,title:'دمية تفاعلية',cat:'toys',price:159,img:'https://source.unsplash.com/collection/1424340/400x400?sig=34'},
-      {id:35,title:'مجموعة تجارب علوم',cat:'toys',price:239,img:'https://source.unsplash.com/collection/1424340/400x400?sig=35'},
-      {id:36,title:'لوحة رسم رقمية للأطفال',cat:'toys',price:149,img:'https://source.unsplash.com/collection/1424340/400x400?sig=36'},
-      {id:37,title:'كرة قدم للأطفال',cat:'toys',price:59,img:'https://source.unsplash.com/collection/1424340/400x400?sig=37'},
-      {id:38,title:'مكعبات خشبية تعليمية',cat:'toys',price:89,img:'https://source.unsplash.com/collection/1424340/400x400?sig=38'},
-      {id:39,title:'طائرة ورقية ملونة',cat:'toys',price:49,img:'https://source.unsplash.com/collection/1424340/400x400?sig=39'},
-      {id:40,title:'مجموعة سيارات صغيرة',cat:'toys',price:129,img:'https://source.unsplash.com/collection/1424340/400x400?sig=40'},
-      {id:41,title:'لوحة موسيقية للأطفال',cat:'toys',price:199,img:'https://source.unsplash.com/collection/1424340/400x400?sig=41'},
-      {id:42,title:'دمية منزلية صغيرة',cat:'toys',price:79,img:'https://source.unsplash.com/collection/1424340/400x400?sig=42'},
-      {id:43,title:'لعبة تركيب ميكانيكية',cat:'toys',price:199,img:'https://source.unsplash.com/collection/1424340/400x400?sig=43'},
-      {id:44,title:'بطاقات تعليمية ملونة',cat:'toys',price:79,img:'https://source.unsplash.com/collection/1424340/400x400?sig=44'},
-      {id:45,title:'مجموعة فنون وأشغال يدوية',cat:'toys',price:129,img:'https://source.unsplash.com/collection/1424340/400x400?sig=45'}
+      {id:31,title:'روبوت تعليمي ذكي',cat:'toys',price:299,img:'image copy 30.png'},
+      {id:32,title:'مجموعة بزل ثلاثي الأبعاد',cat:'toys',price:129,img:'image copy 31.png'},
+      {id:33,title:'سيارة سباق ريموت',cat:'toys',price:199,img:'image copy 32.png'},
+      {id:34,title:'دمية تفاعلية',cat:'toys',price:159,img:'image copy 33.png'},
+      {id:35,title:'مجموعة تجارب علوم',cat:'toys',price:239,img:'image copy 34.png'},
+      {id:36,title:'لوحة رسم رقمية للأطفال',cat:'toys',price:149,img:'image copy 35.png'},
+      {id:37,title:'كرة قدم للأطفال',cat:'toys',price:59,img:'image copy 36.png'},
+      {id:38,title:'مكعبات خشبية تعليمية',cat:'toys',price:89,img:'image copy 37.png'},
+      {id:39,title:'طائرة ورقية ملونة',cat:'toys',price:49,img:'image copy 38.png'},
+      {id:40,title:'مجموعة سيارات صغيرة',cat:'toys',price:129,img:'image copy 39.png'},
+      {id:41,title:'لوحة موسيقية للأطفال',cat:'toys',price:199,img:'image copy 40.png'},
+      {id:42,title:'دمية منزلية صغيرة',cat:'toys',price:79,img:'image copy 41.png'},
+      {id:43,title:'لعبة تركيب ميكانيكية',cat:'toys',price:199,img:'image copy 42.png'},
+      {id:44,title:'بطاقات تعليمية ملونة',cat:'toys',price:79,img:'image copy 43.png'},
+      {id:45,title:'مجموعة فنون وأشغال يدوية',cat:'toys',price:129,img:'image copy 44.png'},
+      {id:46,title:'ساعة ذكية رياضية',cat:'electronics',price:899,img:'image copy 45.png'},
+      {id:47,title:'خلاط كهربائي صغير',cat:'home',price:349,img:'image copy 46.png'},
+      {id:48,title:'جاكيت شتوي رجالي',cat:'fashion',price:499,img:'image copy 47.png'},
+      {id:49,title:'لعبة قطار سريع للأطفال',cat:'toys',price:179,img:'image copy 48.png'},
+      {id:50,title:'كاميرا مراقبة منزلية',cat:'electronics',price:799,img:'image copy 49.png'},
+      {id:51,title:'مفرش سرير قطن',cat:'home',price:259,img:'image copy 50.png'},
+      {id:52,title:'نظارة شمسية عصرية',cat:'fashion',price:149,img:'image copy 51.png'},
+      {id:53,title:'طاولة دراسة خشبية',cat:'home',price:699,img:'image copy 52.png'},
+      {id:54,title:'سوار رياضي سيليكون',cat:'fashion',price:79,img:'image copy 53.png'},
+      {id:55,title:'باور بانك سريع الشحن',cat:'electronics',price:299,img:'image copy 54.png'},
+      {id:56,title:'مجموعة دمى أطفال',cat:'toys',price:199,img:'image copy 55.png'},
+      {id:57,title:'فرن كهربائي صغير',cat:'home',price:899,img:'image copy 56.png'},
+      {id:58,title:'شنطة ظهر مدرسية',cat:'fashion',price:229,img:'image copy 57.png'},
+      {id:59,title:'كيبورد ألعاب احترافي',cat:'electronics',price:999,img:'image copy 58.png'},
+      {id:60,title:'لعبة ذكاء متقدمة',cat:'toys',price:139,img:'image copy 59.png'},
+      {id:61,title:'مروحة مكتب صغيرة',cat:'home',price:129,img:'image copy 60.png'},
+      {id:62,title:'تيشيرت رياضي قطني',cat:'fashion',price:119,img:'image copy 61.png'},
+      {id:63,title:'شاشة كمبيوتر 24 بوصة',cat:'electronics',price:3299,img:'image copy 62.png'},
+      {id:64,title:'مقعد أطفال مريح',cat:'home',price:349,img:'image copy 63.png'},
+      {id:65,title:'سيارة لعبة كهربائية',cat:'toys',price:899,img:'image copy 64.png'},
+      {id:66,title:'خاتم فضة أنيق',cat:'fashion',price:249,img:'image copy 65.png'},
+      {id:67,title:'سبيكر بلوتوث قوي',cat:'electronics',price:459,img:'image copy 66.png'},
+      {id:68,title:'طقم أكواب زجاج',cat:'home',price:99,img:'image copy 67.png'},
+      {id:69,title:'عروسة قماش ناعمة',cat:'toys',price:89,img:'image copy 68.png'},
+      {id:70,title:'جاكيت جلد عصري',cat:'fashion',price:799,img:'image copy 69.png'},
+      {id:71,title:'راوتر واي فاي سريع',cat:'electronics',price:699,img:'image copy 70.png'},
+      {id:72,title:'مكتبة خشب صغيرة',cat:'home',price:599,img:'image copy 71.png'},
+      {id:73,title:'طقم لعب شاطئ',cat:'toys',price:59,img:'image copy 72.png'},
+      {id:74,title:'ساعة يد كلاسيك',cat:'fashion',price:399,img:'image copy 73.png'},
+      {id:75,title:'ماوس ألعاب احترافي',cat:'electronics',price:349,img:'image copy 74.png'},
+      {id:76,title:'مبخرة عطرية منزلية',cat:'home',price:79,img:'image copy 75.png'},
+      {id:77,title:'لعبة مكعبات كبيرة',cat:'toys',price:149,img:'image copy 76.png'},
+      {id:78,title:'حقيبة يد نسائية',cat:'fashion',price:349,img:'image copy 77.png'},
+      {id:79,title:'سماعة بلوتوث محمولة',cat:'electronics',price:259,img:'image copy 78.png'},
+      {id:80,title:'وسادة رقبة للسفر',cat:'home',price:69,img:'image copy 79.png'},
+      {id:81,title:'طقم أساور ملونة',cat:'fashion',price:59,img:'image copy 80.png'},
+      {id:82,title:'طائرة درون صغيرة',cat:'electronics',price:1199,img:'image copy 81.png'},
+      {id:83,title:'مجموعة كتب أطفال',cat:'toys',price:199,img:'image copy 82.png'},
+      {id:84,title:'مصفف شعر كهربائي',cat:'electronics',price:499,img:'image copy 83.png'},
+      {id:85,title:'لوحة حائط فنية',cat:'home',price:179,img:'image copy 84.png'},
+      {id:86,title:'حذاء رسمي رجالي',cat:'fashion',price:599,img:'image copy 85.png'},
+      {id:87,title:'لعبة مسدس فقاعات',cat:'toys',price:129,img:'image copy 86.png'},
+      {id:88,title:'مكنسة كهربائية صغيرة',cat:'home',price:749,img:'image copy 87.png'},
+      {id:89,title:'شاحن سيارة سريع',cat:'electronics',price:149,img:'image copy 88.png'},
+      {id:90,title:'طقم ملابس أطفال',cat:'fashion',price:199,img:'image copy 89.png'},
+      {id:91,title:'مجموعة صلصال ملون',cat:'toys',price:49,img:'image copy 90.png'},
+      {id:92,title:'ميزان رقمي ذكي',cat:'electronics',price:399,img:'image copy 91.png'},
+      {id:93,title:'طقم مفارش مطبخ',cat:'home',price:89,img:'image copy 92.png'},
+      {id:94,title:'كاب رياضي عصري',cat:'fashion',price:79,img:'image copy 93.png'},
+      {id:95,title:'روبوت تحكم عن بعد',cat:'toys',price:299,img:'image copy 94.png'}
     ];
 
     // ====== RENDER PRODUCTS ======
@@ -415,19 +466,41 @@
       }
     });
 
-    // checkout (simple demo behavior)
+    // checkout - send order to WhatsApp
     checkoutBtn.addEventListener('click', ()=>{
       const totalCount = Object.values(cart).reduce((a,b)=>a+b,0);
       if(totalCount === 0){
         alert('العربة فارغة.');
         return;
       }
-      // for demo: show summary then clear cart
-      const total = Object.keys(cart).reduce((sum,id)=>{
-        const p = products.find(x=>x.id==id);
-        return sum + (p ? p.price * cart[id] : 0);
-      },0);
-      alert(`إجمالي طلبك ${total} ج.م\n\nشكراً! (علي استخدام منتجاتنا ازا تود شراء اتصل علي 01010300039 وسيصل مندوبنا لحد بابا البيت)`);
+      
+      // build order message
+      let message = '*طلب من Loka Store*\n\n';
+      message += '🛍️ *تفاصيل الطلب:*\n\n';
+      
+      let total = 0;
+      for(const id in cart){
+        const qty = cart[id];
+        const p = products.find(x=>x.id == id);
+        if(!p) continue;
+        const lineTotal = p.price * qty;
+        total += lineTotal;
+        message += `• ${p.title}\n`;
+        message += `  الكمية: ${qty} × ${p.price} ج.م = ${lineTotal} ج.م\n\n`;
+      }
+      
+      message += `💰 *الإجمالي: ${total} ج.م*\n\n`;
+      message += `شكراً لك! 😊`;
+      
+      // encode message for URL
+      const encodedMsg = encodeURIComponent(message);
+      // Egypt phone number format (remove leading 0 and add country code 20)
+      const whatsappLink = `https://wa.me/201097074813?text=${encodedMsg}`;
+      
+      // open WhatsApp
+      window.open(whatsappLink, '_blank');
+      
+      // clear cart after sending
       cart = {};
       updateCartUI();
       cartModal.style.display = 'none';
